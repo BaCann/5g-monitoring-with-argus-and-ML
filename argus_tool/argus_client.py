@@ -7,24 +7,8 @@ def get_metric(
         path_to_ra: str = "/usr/local/bin/ra",
         server: str = "localhost",
         port: int = 561,
-        duration_in_seconds: int = 15):
-    # cmd = [
-    #     path_to_ra,
-    #     '-S', f'{server}:{port}',
-    #     '-T', f'{duration_in_seconds}',
-    #     '-c', ',',
-    #     '-s',
-    #     'srcid', 'stime', 'ltime', 'sstime', 'dstime', 'sltime', 'dltime',
-    #     'trans', 'seq', 'flgs', 'dur', 'avgdur', 'stddev', 'mindur', 'maxdur',
-    #     'saddr', 'daddr', 'proto', 'sport', 'dport', 'stos', 'dtos', 'sdsb', 'ddsb',
-    #     'sco', 'dco', 'sttl', 'dttl', 'sipid', 'dipid', 'smpls', 'dmpls', 'svlan', 'dvlan',
-    #     'svid', 'dvid', 'svpri', 'dvpri', 'spkts', 'dpkts', 'sbytes', 'dbytes', 'sappbytes',
-    #     'dappbytes', 'sload', 'dload', 'sloss', 'dloss', 'sploss', 'dploss', 'srate', 'drate',
-    #     'smac', 'dmac', 'dir', 'sintpkt', 'dintpkt', 'sjit', 'djit', 'state', 'suser', 'duser',
-    #     'swin', 'dwin', 'trans', 'srng', 'erng', 'stcpb', 'dtcpb', 'tcprtt', 'inode', 'offset',
-    #     'smaxsz', 'dmaxsz', 'sminsz', 'dminsz', 'ackdat', 'shops', 'mean', 'spktsz', 'dpktsz',
-    #     'cause', 'loss', 'bytes'
-    # ]
+        duration_in_seconds: int = 60):
+
     cmd = [
         path_to_ra,
         '-S', f'{server}:{port}',

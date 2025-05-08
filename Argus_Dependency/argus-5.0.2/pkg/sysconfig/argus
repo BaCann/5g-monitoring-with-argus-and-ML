@@ -1,0 +1,10 @@
+
+DAEMON_ARGS=
+#
+# Monitoring with local-only ra client access on default port
+#
+# DAEMON_ARGS="-B 127.0.0.1 -P 561"
+#
+# Monitoring span port on eth1 with local-only access remapping port so radium can multiplex over default 
+#
+# DAEMON_ARGS="-i eth1 -B 127.0.0.1 -P 562"

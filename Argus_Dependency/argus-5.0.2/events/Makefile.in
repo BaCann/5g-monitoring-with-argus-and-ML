@@ -1,0 +1,166 @@
+#
+#  Argus-5.0 Software.  Argus Event files - Makefile.in
+#  Copyright (c) 2000-2024 QoSient, LLC
+#  All rights reserved.
+#
+#  This program is free software, released under the GNU General
+#  Public License; you can redistribute it and/or modify it under the terms
+#  of the GNU General Public License as published by the Free Software
+#  Foundation; either version 3, or any later version.
+#
+#  Other licenses are available through QoSient, LLC.
+#  Inquire at info@qosient.com.
+#
+#  This program is distributed WITHOUT ANY WARRANTY; without even the
+#  implied warranty of * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#  See the * GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+#
+#  Written by Carter Bullard
+#  QoSient, LLC
+#
+# Various configurable paths (remember to edit Makefile.in, not Makefile)
+#
+NOOP = $(SHELL) -c true
+NOECHO = @
+
+# Top level hierarchy
+
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+datarootdir = @datarootdir@
+
+# Pathname of directory to install the system binaries
+SBINDIR = @sbindir@
+# Pathname of directory to install the system binaries
+BINDIR = @bindir@
+# Pathname of directory to install the include files
+INCLDEST = @includedir@
+# Pathname of directory to install the library
+LIBDEST =  @libdir@
+# Pathname of directory to install the man page
+MANDEST = @mandir@
+
+# Pathname of preferred perl to use for perl scripts
+PERL = @V_PERL@
+
+# VPATH
+srcdir = @srcdir@
+VPATH = @srcdir@
+
+COMPATLIB = @COMPATLIB@
+WRAPLIBS = @WRAPLIBS@
+
+#
+# You shouldn't need to edit anything below.
+#
+
+CC = @CC@
+CCOPT = @V_CCOPT@
+INCLS = -I$(srcdir) @V_INCLS@ -I$(srcdir)/../include 
+DEFS = @DEFS@
+#DEFS = -DARGUSPERFMETRICS=1 @DEFS@
+
+
+# Standard CFLAGS
+CFLAGS = $(CCOPT) @LBL_CFLAGS@ $(INCLS) $(DEFS) $(EXTRA_CFLAGS)
+LDFLAGS = @LDFLAGS@
+
+INSTALL = @INSTALL@
+RANLIB = @V_RANLIB@
+
+#
+# Flex and bison allow you to specify the prefixes of the global symbols
+# used by the generated parser.  This allows programs to use lex/yacc
+# and link against libpcap.  If you don't have flex or bison, get them.
+#
+LEX = @V_LEX@
+YACC = @V_YACC@
+
+# Explicitly define compilation rule since SunOS 4's make doesn't like gcc.
+# Also, gcc does not remove the .o before forking 'as', which can be a
+# problem if you don't own the file but can write to the directory.
+.c.o:
+	@rm -f $@
+	$(CC) $(CFLAGS) -c $<
+
+SRC =	argus-extip.pl argus-lsof.pl argus-stumbler.pl argus-snmp.sh argus-vmstat.sh argus-airport.sh argus-netstat.pl\
+	argus-ipaddr.pl argus-ipmitool.pl
+
+PROG =	@INSTALL_BIN@/argus-extip @INSTALL_BIN@/argus-lsof @INSTALL_BIN@/argus-stumbler @INSTALL_BIN@/argus-snmp \
+	@INSTALL_BIN@/argus-vmstat @INSTALL_BIN@/argus-airport @INSTALL_BIN@/argus-netstat \
+	@INSTALL_BIN@/argus-ipaddr @INSTALL_BIN@/argus-ipmitool
+
+CLEANFILES = $(PROG)
+
+all: $(PROG)
+
+@INSTALL_BIN@/argus-ipmitool: argus-ipmitool.pl
+	sed 's+@PERLBIN@+$(PERL)+' argus-ipmitool.pl > $@
+	chmod +x $@
+
+@INSTALL_BIN@/argus-ipaddr: argus-ipaddr.pl
+	sed 's+@PERLBIN@+$(PERL)+' argus-ipaddr.pl > $@
+	chmod +x $@
+
+@INSTALL_BIN@/argus-extip: argus-extip.pl
+	sed 's+@PERLBIN@+$(PERL)+' argus-extip.pl > $@
+	chmod +x $@
+
+@INSTALL_BIN@/argus-lsof: argus-lsof.pl
+	sed 's+@PERLBIN@+$(PERL)+' argus-lsof.pl > $@
+	chmod +x $@
+
+@INSTALL_BIN@/argus-netstat: argus-netstat.pl
+	sed 's+@PERLBIN@+$(PERL)+' argus-netstat.pl > $@
+	chmod +x $@
+
+@INSTALL_BIN@/argus-stumbler: argus-stumbler.pl
+	sed 's+@PERLBIN@+$(PERL)+' argus-stumbler.pl > $@
+	chmod +x $@
+
+@INSTALL_BIN@/argus-snmp: argus-snmp.sh
+	cp -f argus-snmp.sh $@
+
+@INSTALL_BIN@/argus-vmstat: argus-vmstat.sh
+	cp -f argus-vmstat.sh $@
+
+@INSTALL_BIN@/argus-airport: argus-airport.sh
+	cp -f argus-airport.sh $@
+
+install: all force
+	[ -d $(DESTDIR)$(SBINDIR) ] || \
+		(mkdir -p $(DESTDIR)$(SBINDIR); chmod 755 $(DESTDIR)$(SBINDIR))
+	$(INSTALL) $(srcdir)/../bin/argus-extip    $(DESTDIR)$(BINDIR)/argus-extip
+	$(INSTALL) $(srcdir)/../bin/argus-lsof     $(DESTDIR)$(BINDIR)/argus-lsof
+	$(INSTALL) $(srcdir)/../bin/argus-netstat  $(DESTDIR)$(BINDIR)/argus-netstat
+	$(INSTALL) $(srcdir)/../bin/argus-stumbler $(DESTDIR)$(BINDIR)/argus-stumbler
+	$(INSTALL) $(srcdir)/../bin/argus-snmp     $(DESTDIR)$(BINDIR)/argus-snmp
+	$(INSTALL) $(srcdir)/../bin/argus-vmstat   $(DESTDIR)$(BINDIR)/argus-vmstat
+	$(INSTALL) $(srcdir)/../bin/argus-airport  $(DESTDIR)$(BINDIR)/argus-airport
+	$(INSTALL) $(srcdir)/../bin/argus-ipaddr   $(DESTDIR)$(BINDIR)/argus-ipaddr
+	$(INSTALL) $(srcdir)/../bin/argus-ipmitool $(DESTDIR)$(BINDIR)/argus-ipmitool
+
+uninstall: all force
+	rm -f $(DESTDIR)$(BINDIR)/argus-extip
+	rm -f $(DESTDIR)$(BINDIR)/argus-lsof
+	rm -f $(DESTDIR)$(BINDIR)/argus-netstat
+	rm -f $(DESTDIR)$(BINDIR)/argus-stumbler
+	rm -f $(DESTDIR)$(BINDIR)/argus-snmp
+	rm -f $(DESTDIR)$(BINDIR)/argus-vmstat
+	rm -f $(DESTDIR)$(BINDIR)/argus-airport
+	rm -f $(DESTDIR)$(BINDIR)/argus-ipaddr
+	rm -f $(DESTDIR)$(BINDIR)/argus-ipmitool
+
+clean:
+	rm -f $(CLEANFILES)
+
+distclean:
+	rm -f $(CLEANFILES) Makefile
+
+force:	/tmp
+depend:	force
+	$(NOECHO) $(NOOP)

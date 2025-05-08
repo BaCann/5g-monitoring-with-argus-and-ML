@@ -1,0 +1,57 @@
+/*
+ * Argus-5.0 Software. Argus files - Events include files
+ * Copyright (c) 2000-2024 QoSient, LLC
+ * All rights reserved.
+ *
+ * This program is free software, released under the GNU General
+ * Public License; you can redistribute it and/or modify it under the terms
+ * of the GNU General Public License as published by the Free Software
+ * Foundation; either version 3, or any later version.
+ *
+ * Other licenses are available through QoSient, LLC.
+ * Inquire at info@qosient.com.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the
+ * implied warranty of * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ *
+ * Written by Carter Bullard
+ * QoSient, LLC
+ *
+ */
+
+#ifndef __ARGUSGETTIMEOFDAY_H
+# define __ARGUSGETTIMEOFDAY_H
+
+# ifdef HAVE_CONFIG_H
+#  include "argus_config.h"
+# endif
+# include <sys/time.h>
+# include <ArgusSource.h>
+# include "argus_def.h"
+
+/* call gettimeofday and convert to nanoseconds if required */
+
+# ifdef __GNUC__
+__attribute__((always_inline))
+# endif
+inline
+static int
+ArgusGetTimeOfDay(const struct ArgusSourceStruct * const src,
+                  struct timeval *tv)
+{
+   int rv;
+
+   rv = gettimeofday(tv, 0);
+   if (rv == 0) {
+      if (src->timeStampType == ARGUS_TYPE_UTC_NANOSECONDS)
+         tv->tv_usec *= 1000;
+   }
+   return rv;
+}
+
+#endif

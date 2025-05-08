@@ -1,0 +1,51 @@
+/*
+ * Argus-5.0 Software.  Common include files. namedb
+ * Copyright (c) 2000-2024 QoSient, LLC
+ * All rights reserved.
+ *
+ * This program is free software, released under the GNU General
+ * Public License; you can redistribute it and/or modify it under the terms
+ * of the GNU General Public License as published by the Free Software
+ * Foundation; either version 3, or any later version.
+ *
+ * Other licenses are available through QoSient, LLC.
+ * Inquire at info@qosient.com.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the
+ * implied warranty of * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ *
+ * Written by Carter Bullard
+ * QoSient, LLC
+ *
+ */
+
+All documenation for argus-5.0 can be found on the argus home website:
+   http://qosient.com/argus/
+
+If you find that any documentation is either not current, or incorrect,
+please don't hesitate to send email to the argus developers mailing list,
+or argus@qosient.com.
+
+Man page conversion to pdf's is done with the shell script below, using 
+Ghostscript's ps2pdf on Linux and pstopdf on Mac OS X.  Both use 
+"man -t" to generates postscript output.  This maybe the case on all
+Unix's but not sure about that.
+
+for i in man/*/*; \
+do echo $i; \
+   man -t $i | ps2pdf - `echo $i | sed -e "s/man/doc\/pdf\/man/"`.pdf; \
+done
+
+For Mac OS X, use pstopdf.
+
+for i in man/*/*; \
+do echo $i; \
+   man -t $i | pstopdf -i -o `echo $i | sed -e "s/man/doc\/pdf\/man/"`.pdf; \
+done
+
+
